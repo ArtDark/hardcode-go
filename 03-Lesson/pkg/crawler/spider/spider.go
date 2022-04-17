@@ -3,7 +3,7 @@
 package spider
 
 import (
-	"GoSearch/02-Lesson/pkg/crawler"
+	"GoSearch/03-Lesson/pkg/crawler"
 	"log"
 	"net/http"
 	"strings"
@@ -171,4 +171,15 @@ func sliceContains(slice []string, value string) bool {
 		}
 	}
 	return false
+}
+
+// EnumId создает идентификаторы для экземпляров Document
+func EnumId(d []crawler.Document) []crawler.Document {
+	var enum []crawler.Document
+	for i, v := range d {
+		v.ID = i
+		enum = append(enum, v)
+	}
+	return enum
+
 }
