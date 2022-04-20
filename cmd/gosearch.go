@@ -48,9 +48,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	result := inx.Index[strings.ToLower(*sFlag)]
-	if result != nil {
-		for _, v := range result {
+	i := inx.Index[strings.ToLower(*sFlag)]
+	if i != nil {
+		for _, v := range i {
 			fmt.Println(binarySearch(data, v).URL)
 		}
 	} else {
@@ -66,7 +66,6 @@ func help() {
 	fmt.Printf("Использование:\n")
 	fmt.Printf("  %s [аргументы]\n", filepath.Base(os.Args[0]))
 	fmt.Printf("\n")
-
 	fmt.Printf("Aргументы:\n")
 	flag.PrintDefaults()
 }
