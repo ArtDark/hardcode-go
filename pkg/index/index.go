@@ -2,21 +2,21 @@
 package index
 
 import (
-	"GoSearch/03-Lesson/pkg/crawler"
+	"GoSearch/pkg/crawler"
 	"fmt"
 	"strings"
 )
 
-// index слово из описания ссылок, значение – номера документов.
-type index map[string][]int
+// Index слово из описания ссылок, значение – номера документов.
+type Index map[string][]int
 
 // Db структура для храннения инвертированных индексов
 type Db struct {
-	index
+	Index
 }
 
 func New() *Db {
-	return &Db{index: index{}}
+	return &Db{Index: Index{}}
 }
 
 // Add добавляет в структуру Db слова из описания ссылок и идентификатор
@@ -31,7 +31,7 @@ func (d *Db) Add(doc ...crawler.Document) error {
 			if d.exist(s, v.ID) {
 				continue
 			}
-			d.index[s] = append(d.index[s], v.ID)
+			d.Index[s] = append(d.Index[s], v.ID)
 		}
 	}
 	return nil
@@ -39,15 +39,9 @@ func (d *Db) Add(doc ...crawler.Document) error {
 
 // exist проверяет наличие слова в базе индексов
 func (d *Db) exist(s string, id int) bool {
-	itm := d.index[s]
+	itm := d.Index[s]
 
 	return contains(itm, id)
-}
-
-// Find поиск слова в Бд индексов. Возвращает идет идентификаторы документов.
-func (d *Db) Find(s string) []int {
-	lowS := strings.ToLower(s)
-	return d.index[lowS]
 }
 
 // contains сообщает имеется ли элемент в списке

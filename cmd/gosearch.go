@@ -1,67 +1,73 @@
 package main
 
 import (
-	"GoSearch/03-Lesson/pkg/crawler"
-	"GoSearch/03-Lesson/pkg/crawler/spider"
-	"GoSearch/03-Lesson/pkg/index"
+	"GoSearch/pkg/crawler"
+	"GoSearch/pkg/crawler/spider"
+	"GoSearch/pkg/index"
 	"flag"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func main() {
-	//Инициализация аргументов
+
 	sFlag := flag.String("s", "", `поиск слова на страницах "go.dev" и "golang.org"`)
 	dFlag := flag.Int("d", 0, "глубина перехода по ссылкам")
 	flag.Usage = help
 	flag.Parse()
 
-	//Инициализация робота
+	// Инициализация робота
 	spr := spider.New()
-	//Инициализация БД индексов
+	// Инициализация БД индексов
 	inx := index.New()
 
-	//Список адресов
+	// Список адресов
 	adr := []string{"https://go.dev", "https://golang.org"}
 
-	//Результат сканированя робота
+	// Результат сканированя робота
 	var data []crawler.Document
 
-	//Добавление результатов сканирования
+	// Добавление результатов сканирования
 	for _, v := range adr {
 		res, err := spr.Scan(v, *dFlag)
 		if err != nil {
 			log.Printf("Ошибка! %v", err)
-			os.Exit(1)
+			continue
 		}
 		data = append(data, res...)
 	}
-	// добавление идентификаторв
+	// Добавление идентификаторв
 	data = spider.EnumId(data)
 
-	// добавление индексов в БД
+	// Добавление индексов в БД
 	if err := inx.Add(data...); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	result := inx.Find(*sFlag)
-	for _, v := range result {
-		d := binarySearch(data, v)
-		fmt.Println(d.URL)
+	result := inx.Index[strings.ToLower(*sFlag)]
+	if result != nil {
+		for _, v := range result {
+			fmt.Println(binarySearch(data, v).URL)
+		}
+	} else {
+		fmt.Println("Links not found")
 	}
+
+	os.Exit(0)
 
 }
 
 //help справка по использованию утилиты
 func help() {
-	_, _ = fmt.Printf("Использование:\n")
-	_, _ = fmt.Printf("  %s [аргументы]\n", filepath.Base(os.Args[0]))
-	_, _ = fmt.Printf("\n")
+	fmt.Printf("Использование:\n")
+	fmt.Printf("  %s [аргументы]\n", filepath.Base(os.Args[0]))
+	fmt.Printf("\n")
 
-	_, _ = fmt.Printf("Aргументы:\n")
+	fmt.Printf("Aргументы:\n")
 	flag.PrintDefaults()
 }
 

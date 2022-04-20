@@ -3,7 +3,7 @@
 package spider
 
 import (
-	"GoSearch/03-Lesson/pkg/crawler"
+	"GoSearch/pkg/crawler"
 	"log"
 	"net/http"
 	"strings"
