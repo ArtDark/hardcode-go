@@ -61,7 +61,7 @@ func main() {
 
 }
 
-//help справка по использованию утилиты
+// help справка по использованию утилиты
 func help() {
 	fmt.Printf("Использование:\n")
 	fmt.Printf("  %s [аргументы]\n", filepath.Base(os.Args[0]))
