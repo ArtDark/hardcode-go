@@ -4,7 +4,6 @@ import (
 	"GoSearch/pkg/crawler"
 	"GoSearch/pkg/crawler/spider"
 	"GoSearch/pkg/index"
-	"GoSearch/pkg/store"
 	"flag"
 	"fmt"
 	"log"
@@ -14,14 +13,9 @@ import (
 )
 
 func main() {
-	exPath, err := os.Executable()
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	sFlag := flag.String("s", "", `поиск слова на страницах "go.dev" и "golang.org"`)
 	dFlag := flag.Int("d", 0, "глубина перехода по ссылкам")
-	pFlag := flag.String("p", exPath, "путь для сохранения дампа результата сканирования")
 	flag.Usage = help
 	flag.Parse()
 
@@ -36,35 +30,17 @@ func main() {
 	// Результат сканированя робота
 	var data []crawler.Document
 
-	str, err := store.New(*pFlag)
-	if err != nil {
-		log.Println(err)
-	}
-
-	data, err = str.Data()
-	if err != nil {
-		log.Println(err)
-	}
-	// Проверка наличия данных в файле
-	if data == nil {
-		// Сканирование
-		for _, v := range adr {
-			res, err := spr.Scan(v, *dFlag)
-			if err != nil {
-				log.Printf("Ошибка! %v", err)
-				continue
-			}
-			data = append(data, res...)
-		}
-		// Добавление идентификаторв
-		data = spider.EnumId(data)
-
-		// добавление
-		err = str.Save(data)
+	// Добавление результатов сканирования
+	for _, v := range adr {
+		res, err := spr.Scan(v, *dFlag)
 		if err != nil {
-			log.Println(err)
+			log.Printf("Ошибка! %v", err)
+			continue
 		}
+		data = append(data, res...)
 	}
+	// Добавление идентификаторв
+	data = spider.EnumId(data)
 
 	// Добавление индексов в БД
 	if err := inx.Add(data...); err != nil {
