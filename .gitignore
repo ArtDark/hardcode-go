@@ -9,3 +9,4 @@
 /dataSources.local.xml
 
 go.mod
+go.sum
