@@ -11,36 +11,17 @@ const errNegativeMeaning = "координаты не могут быть мен
 
 // Plain координатная плоскость
 type Plain struct {
-	A Point
-	B Point
-}
-
-// Point координаты точки на плоскости
-type Point struct {
-	x float64
-	y float64
-}
-
-// NewPlain создает координатную плоскость с двумя точками
-func NewPlain(a Point, b Point) *Plain {
-	return &Plain{A: a, B: b}
-}
-
-// NewPoint создает точку на координатной плоскости
-func NewPoint(x float64, y float64) *Point {
-	return &Point{x: x, y: y}
+	X1, Y1 float64
+	X2, Y2 float64
 }
 
 // CalculateDistance расчитывает расстояние между двумя точками на плоскости
-func (p *Plain) CalculateDistance() (distance float64, err error) {
+func CalculateDistance(x1, y1, x2, y2 float64) (distance float64, err error) {
 
-	if p.A.x < 0 || p.B.x < 0 || p.A.y < 0 || p.B.y < 0 {
-
+	if x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0 {
 		return 0, errors.New(errNegativeMeaning)
-	} else {
-		distance = math.Sqrt(math.Pow(p.B.x-p.A.x, 2) + math.Pow(p.B.y-p.A.y, 2))
 	}
 
 	// возврат расстояния между точками
-	return distance, nil
+	return math.Sqrt(math.Pow(x2-x1, 2) + math.Pow(y2-y1, 2)), nil
 }
