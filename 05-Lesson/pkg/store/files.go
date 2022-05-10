@@ -15,7 +15,7 @@ type Service struct {
 
 const fileName = "data"
 
-//Save сохраняет результы поиска в формате JSON
+// Save сохраняет результы поиска в формате JSON
 func (s *Service) Save(d []crawler.Document) error {
 	b, err := json.Marshal(d)
 	if err != nil {
@@ -35,7 +35,6 @@ func New(path string) (*Service, error) {
 	var str Service
 
 	f, err := os.OpenFile(filepath.Join(p, fileName), os.O_RDWR|os.O_CREATE, 0755)
-
 	if err != nil {
 		return nil, err
 	}
