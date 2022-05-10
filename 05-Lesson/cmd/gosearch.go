@@ -17,28 +17,23 @@ func main() {
 
 	exPath, err := os.Executable()
 	if err != nil {
-		log.Fatalf("Ошибка! Неудается получить путь дирректории с исполняемым файлом. %v", err)
+		log.Fatalf("ошибка! Неудается получить путь дирректории с исполняемым файлом. %v", err)
 	}
 
 	sFlag := flag.String("s", "", `поиск слова на страницах "go.dev" и "golang.org"`)
 	dFlag := flag.Int("d", 0, "глубина перехода по ссылкам")
-	pFlag := flag.String("p", exPath, "путь для сохранения дампа результата сканирования")
+
 	flag.Usage = help
 	flag.Parse()
 
-	// Инициализация робота
 	spr := spider.New()
-	// Инициализация БД индексов
 	inx := index.New()
 
-	// Список адресов
 	adr := []string{"https://go.dev", "https://golang.org"}
 
-	// Результат сканированя робота
 	var data []crawler.Document
 
-	// Добавление результатов сканирования
-	str, err := store.New(*pFlag)
+	str, err := store.New(exPath)
 	if err != nil {
 		log.Println(err)
 	}
@@ -50,7 +45,6 @@ func main() {
 
 	// Проверка наличия данных в файле
 	if data == nil {
-		// Сканирование
 		for _, v := range adr {
 			res, err := spr.Scan(v, *dFlag)
 			if err != nil {
@@ -60,14 +54,12 @@ func main() {
 			data = append(data, res...)
 		}
 
-		// Добавление идентификаторв
 		data = spider.EnumId(data)
 
 	}
 
-	// Добавление индексов
 	if err := inx.Add(data...); err != nil {
-		log.Fatalf("Ошибка! Не возможно добавить индексы. %v", err)
+		log.Fatalf("ошибка! Не возможно добавить индексы. %v", err)
 	}
 
 	i := inx.Index[strings.ToLower(*sFlag)]
