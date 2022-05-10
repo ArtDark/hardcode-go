@@ -1,0 +1,11 @@
+goos: linux
+goarch: amd64
+pkg: GoSearch/07-Lesson/pkg
+cpu: Intel(R) Core(TM) i5-3320M CPU @ 2.60GHz
+BenchmarkInts-4   	       5	 210328307 ns/op
+BenchmarkInts-4   	       5	 207873700 ns/op
+BenchmarkInts-4   	       5	 203442594 ns/op
+BenchmarkInts-4   	       5	 204064635 ns/op
+BenchmarkInts-4   	       5	 202673379 ns/op
+PASS
+ok  	GoSearch/07-Lesson/pkg	20.886s
