@@ -3,6 +3,7 @@ package main
 import (
 	count "GoSearch/09-Lesson/pkg/counterparty"
 	icount "GoSearch/09-Lesson/pkg/icounterparty"
+	"GoSearch/09-Lesson/pkg/str"
 	"fmt"
 )
 
@@ -22,5 +23,9 @@ func main() {
 	dan := count.NewEmployee(40)
 
 	fmt.Printf("Самому старшему контрагенту %d лет.\n", count.Elder(alice, bob, carol, dan))
+
+	// Task 3
+	s := &str.Data{}
+	str.Add(s, 1, "2", 3.00, "fwe", -3234)
 
 }
